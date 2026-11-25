@@ -1,0 +1,224 @@
+{
+  "schema": 1,
+  "id": "denon-avr",
+  "name": "Denon / Marantz AV receiver",
+  "manufacturer": "Denon",
+  "model": "AVR-X / SR / NR (2016 and later)",
+  "category": "receiver",
+  "icon": "receiver",
+  "description": "Network control of Denon and Marantz AV receivers over Telnet (port 23) or HTTP (port 8080).",
+  "transports": {
+    "tcp": {
+      "label": "Telnet (port 23)",
+      "default": true,
+      "connection": {
+        "netHost": "{{host}}",
+        "netPort": 23
+      }
+    },
+    "http": {
+      "label": "HTTP (port 8080)",
+      "connection": {
+        "netHost": "{{host}}",
+        "netPort": 8080
+      }
+    },
+    "ir": {
+      "label": "Infrared (learn the codes later)"
+    }
+  },
+  "setup": {
+    "message": "Enter the receiver's IP address. To turn it on over the network, set Network > Settings > Network Control to Always On on the receiver.",
+    "fields": [
+      {
+        "key": "host",
+        "label": "IP address",
+        "type": "string",
+        "required": true,
+        "placeholder": "192.168.1.50"
+      }
+    ]
+  },
+  "commands": [
+    {
+      "name": "PowerOn",
+      "transport": "tcp",
+      "tcpPayload": "PWON\\r"
+    },
+    {
+      "name": "PowerOff",
+      "transport": "tcp",
+      "tcpPayload": "PWSTANDBY\\r"
+    },
+    {
+      "name": "VolumeUp",
+      "transport": "tcp",
+      "tcpPayload": "MVUP\\r"
+    },
+    {
+      "name": "VolumeDown",
+      "transport": "tcp",
+      "tcpPayload": "MVDOWN\\r"
+    },
+    {
+      "name": "MuteOn",
+      "transport": "tcp",
+      "tcpPayload": "MUON\\r"
+    },
+    {
+      "name": "MuteOff",
+      "transport": "tcp",
+      "tcpPayload": "MUOFF\\r"
+    },
+    {
+      "name": "InputTV",
+      "transport": "tcp",
+      "tcpPayload": "SITV\\r"
+    },
+    {
+      "name": "InputBluRay",
+      "transport": "tcp",
+      "tcpPayload": "SIBD\\r"
+    },
+    {
+      "name": "InputGame",
+      "transport": "tcp",
+      "tcpPayload": "SIGAME\\r"
+    },
+    {
+      "name": "InputMediaPlayer",
+      "transport": "tcp",
+      "tcpPayload": "SIMPLAY\\r"
+    },
+    {
+      "name": "InputCable",
+      "transport": "tcp",
+      "tcpPayload": "SISAT/CBL\\r"
+    },
+    {
+      "name": "InputBluetooth",
+      "transport": "tcp",
+      "tcpPayload": "SIBT\\r"
+    },
+    {
+      "name": "InputTuner",
+      "transport": "tcp",
+      "tcpPayload": "SITUNER\\r"
+    },
+    {
+      "name": "InputNetwork",
+      "transport": "tcp",
+      "tcpPayload": "SINET\\r"
+    },
+    {
+      "name": "SoundMovie",
+      "transport": "tcp",
+      "tcpPayload": "MSMOVIE\\r"
+    },
+    {
+      "name": "SoundMusic",
+      "transport": "tcp",
+      "tcpPayload": "MSMUSIC\\r"
+    },
+    {
+      "name": "SoundStereo",
+      "transport": "tcp",
+      "tcpPayload": "MSSTEREO\\r"
+    },
+    {
+      "name": "SoundDirect",
+      "transport": "tcp",
+      "tcpPayload": "MSDIRECT\\r"
+    },
+    {
+      "name": "PowerOn",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?PWON"
+    },
+    {
+      "name": "PowerOff",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?PWSTANDBY"
+    },
+    {
+      "name": "VolumeUp",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?MVUP"
+    },
+    {
+      "name": "VolumeDown",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?MVDOWN"
+    },
+    {
+      "name": "MuteOn",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?MUON"
+    },
+    {
+      "name": "MuteOff",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?MUOFF"
+    },
+    {
+      "name": "InputTV",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?SITV"
+    },
+    {
+      "name": "InputBluRay",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?SIBD"
+    },
+    {
+      "name": "InputGame",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?SIGAME"
+    },
+    {
+      "name": "InputMediaPlayer",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?SIMPLAY"
+    },
+    {
+      "name": "InputCable",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?SISAT%2FCBL"
+    },
+    {
+      "name": "InputBluetooth",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?SIBT"
+    },
+    {
+      "name": "InputTuner",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?SITUNER"
+    },
+    {
+      "name": "InputNetwork",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?SINET"
+    },
+    {
+      "name": "SoundMovie",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?MSMOVIE"
+    },
+    {
+      "name": "SoundMusic",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?MSMUSIC"
+    },
+    {
+      "name": "SoundStereo",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?MSSTEREO"
+    },
+    {
+      "name": "SoundDirect",
+      "transport": "http",
+      "httpPath": "/goform/formiPhoneAppDirect.xml?MSDIRECT"
+    }
+  ]
+}

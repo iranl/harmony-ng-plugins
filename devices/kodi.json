@@ -1,0 +1,228 @@
+{
+  "schema": 1,
+  "id": "kodi",
+  "name": "Kodi",
+  "manufacturer": "Kodi",
+  "model": "Kodi 19 and later",
+  "category": "media",
+  "icon": "streamer",
+  "description": "Kodi media centers over JSON-RPC (HTTP, port 8080 by default).",
+  "transports": {
+    "http": {
+      "label": "JSON-RPC (HTTP)",
+      "default": true,
+      "connection": {
+        "netHost": "{{host}}",
+        "netPort": "{{port}}",
+        "httpAuthType": "basic",
+        "httpUser": "{{user}}",
+        "httpPassword": "{{password}}"
+      }
+    },
+    "bt": {
+      "label": "Bluetooth keyboard (pair the Hub with the Kodi box later)"
+    }
+  },
+  "setup": {
+    "message": "In Kodi, open Settings > Services > Control: turn on Allow remote control via HTTP, and set a username and password (Kodi 19 and later need one).",
+    "fields": [
+      {
+        "key": "host",
+        "label": "IP address",
+        "type": "string",
+        "required": true,
+        "placeholder": "192.168.1.50"
+      },
+      {
+        "key": "port",
+        "label": "Port",
+        "type": "number",
+        "default": 8080,
+        "required": true
+      },
+      {
+        "key": "user",
+        "label": "Username",
+        "type": "string",
+        "default": "kodi",
+        "required": true
+      },
+      {
+        "key": "password",
+        "label": "Password",
+        "type": "password",
+        "required": true
+      }
+    ]
+  },
+  "commands": [
+    {
+      "name": "DirectionUp",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.Up\"}"
+    },
+    {
+      "name": "DirectionDown",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.Down\"}"
+    },
+    {
+      "name": "DirectionLeft",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.Left\"}"
+    },
+    {
+      "name": "DirectionRight",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.Right\"}"
+    },
+    {
+      "name": "Select",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.Select\"}"
+    },
+    {
+      "name": "Back",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.Back\"}"
+    },
+    {
+      "name": "Home",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.Home\"}"
+    },
+    {
+      "name": "Info",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.Info\"}"
+    },
+    {
+      "name": "Menu",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.ContextMenu\"}"
+    },
+    {
+      "name": "PlayPause",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.ExecuteAction\",\"params\":{\"action\":\"playpause\"}}"
+    },
+    {
+      "name": "Stop",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.ExecuteAction\",\"params\":{\"action\":\"stop\"}}"
+    },
+    {
+      "name": "NextTrack",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.ExecuteAction\",\"params\":{\"action\":\"skipnext\"}}"
+    },
+    {
+      "name": "PreviousTrack",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.ExecuteAction\",\"params\":{\"action\":\"skipprevious\"}}"
+    },
+    {
+      "name": "FastForward",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.ExecuteAction\",\"params\":{\"action\":\"fastforward\"}}"
+    },
+    {
+      "name": "Rewind",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.ExecuteAction\",\"params\":{\"action\":\"rewind\"}}"
+    },
+    {
+      "name": "Subtitles",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.ExecuteAction\",\"params\":{\"action\":\"showsubtitles\"}}"
+    },
+    {
+      "name": "OSD",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.ExecuteAction\",\"params\":{\"action\":\"osd\"}}"
+    },
+    {
+      "name": "Fullscreen",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Input.ExecuteAction\",\"params\":{\"action\":\"fullscreen\"}}"
+    },
+    {
+      "name": "VolumeUp",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Application.SetVolume\",\"params\":{\"volume\":\"increment\"}}"
+    },
+    {
+      "name": "VolumeDown",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Application.SetVolume\",\"params\":{\"volume\":\"decrement\"}}"
+    },
+    {
+      "name": "Mute",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/jsonrpc",
+      "httpContentType": "application/json",
+      "httpBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"Application.SetMute\",\"params\":{\"mute\":\"toggle\"}}"
+    }
+  ]
+}

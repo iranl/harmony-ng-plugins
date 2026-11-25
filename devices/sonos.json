@@ -1,0 +1,160 @@
+{
+  "schema": 1,
+  "id": "sonos",
+  "name": "Sonos speaker",
+  "manufacturer": "Sonos",
+  "model": "Sonos (S1 and S2)",
+  "category": "speaker",
+  "icon": "sonos",
+  "description": "Sonos speakers over their local UPnP control (HTTP, port 1400).",
+  "transports": {
+    "http": {
+      "label": "UPnP (HTTP, port 1400)",
+      "default": true,
+      "connection": {
+        "netHost": "{{host}}",
+        "netPort": 1400
+      }
+    }
+  },
+  "setup": {
+    "message": "Enter the speaker's IP address (Sonos app: Settings > System > About My System). For a group, use the group's coordinator.",
+    "fields": [
+      {
+        "key": "host",
+        "label": "IP address",
+        "type": "string",
+        "required": true,
+        "placeholder": "192.168.1.50"
+      }
+    ]
+  },
+  "commands": [
+    {
+      "name": "Play",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/MediaRenderer/AVTransport/Control",
+      "httpContentType": "text/xml; charset=\"utf-8\"",
+      "httpBody": "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID><Speed>1</Speed></u:Play></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-upnp-org:service:AVTransport:1#Play\""
+        }
+      ]
+    },
+    {
+      "name": "Pause",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/MediaRenderer/AVTransport/Control",
+      "httpContentType": "text/xml; charset=\"utf-8\"",
+      "httpBody": "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:Pause xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:Pause></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-upnp-org:service:AVTransport:1#Pause\""
+        }
+      ]
+    },
+    {
+      "name": "Stop",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/MediaRenderer/AVTransport/Control",
+      "httpContentType": "text/xml; charset=\"utf-8\"",
+      "httpBody": "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:Stop xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:Stop></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-upnp-org:service:AVTransport:1#Stop\""
+        }
+      ]
+    },
+    {
+      "name": "NextTrack",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/MediaRenderer/AVTransport/Control",
+      "httpContentType": "text/xml; charset=\"utf-8\"",
+      "httpBody": "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:Next xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:Next></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-upnp-org:service:AVTransport:1#Next\""
+        }
+      ]
+    },
+    {
+      "name": "PreviousTrack",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/MediaRenderer/AVTransport/Control",
+      "httpContentType": "text/xml; charset=\"utf-8\"",
+      "httpBody": "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:Previous xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:Previous></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-upnp-org:service:AVTransport:1#Previous\""
+        }
+      ]
+    },
+    {
+      "name": "VolumeUp",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/MediaRenderer/RenderingControl/Control",
+      "httpContentType": "text/xml; charset=\"utf-8\"",
+      "httpBody": "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:SetRelativeVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel><Adjustment>2</Adjustment></u:SetRelativeVolume></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-upnp-org:service:RenderingControl:1#SetRelativeVolume\""
+        }
+      ]
+    },
+    {
+      "name": "VolumeDown",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/MediaRenderer/RenderingControl/Control",
+      "httpContentType": "text/xml; charset=\"utf-8\"",
+      "httpBody": "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:SetRelativeVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel><Adjustment>-2</Adjustment></u:SetRelativeVolume></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-upnp-org:service:RenderingControl:1#SetRelativeVolume\""
+        }
+      ]
+    },
+    {
+      "name": "MuteOn",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/MediaRenderer/RenderingControl/Control",
+      "httpContentType": "text/xml; charset=\"utf-8\"",
+      "httpBody": "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:SetMute xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel><DesiredMute>1</DesiredMute></u:SetMute></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-upnp-org:service:RenderingControl:1#SetMute\""
+        }
+      ]
+    },
+    {
+      "name": "MuteOff",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/MediaRenderer/RenderingControl/Control",
+      "httpContentType": "text/xml; charset=\"utf-8\"",
+      "httpBody": "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:SetMute xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel><DesiredMute>0</DesiredMute></u:SetMute></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-upnp-org:service:RenderingControl:1#SetMute\""
+        }
+      ]
+    }
+  ]
+}
