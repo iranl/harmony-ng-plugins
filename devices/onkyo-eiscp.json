@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "id": "onkyo-eiscp",
+  "name": "Onkyo / Pioneer / Integra AV receiver",
+  "manufacturer": "Onkyo",
+  "model": "Network receiver (eISCP)",
+  "category": "receiver",
+  "icon": "receiver",
+  "description": "Onkyo, Pioneer (2016 and later) and Integra network receivers over eISCP (TCP port 60128).",
+  "transports": {
+    "tcp": {
+      "label": "eISCP (port 60128)",
+      "default": true,
+      "connection": {
+        "netHost": "{{host}}",
+        "netPort": 60128
+      }
+    },
+    "ir": {
+      "label": "Infrared (learn the codes later)"
+    }
+  },
+  "setup": {
+    "message": "Enter the receiver's IP address. To turn it on over the network, enable Network Standby on the receiver.",
+    "fields": [
+      {
+        "key": "host",
+        "label": "IP address",
+        "type": "string",
+        "required": true,
+        "placeholder": "192.168.1.50"
+      }
+    ]
+  },
+  "commands": [
+    {
+      "name": "PowerOn",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 50 57 52 30 31 0D"
+    },
+    {
+      "name": "PowerOff",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 50 57 52 30 30 0D"
+    },
+    {
+      "name": "VolumeUp",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 4D 56 4C 55 50 0D"
+    },
+    {
+      "name": "VolumeDown",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 0A 01 00 00 00 21 31 4D 56 4C 44 4F 57 4E 0D"
+    },
+    {
+      "name": "MuteToggle",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 41 4D 54 54 47 0D"
+    },
+    {
+      "name": "MuteOn",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 41 4D 54 30 31 0D"
+    },
+    {
+      "name": "MuteOff",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 41 4D 54 30 30 0D"
+    },
+    {
+      "name": "InputBluRay",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 53 4C 49 31 30 0D"
+    },
+    {
+      "name": "InputCable",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 53 4C 49 30 31 0D"
+    },
+    {
+      "name": "InputGame",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 53 4C 49 30 32 0D"
+    },
+    {
+      "name": "InputPC",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 53 4C 49 30 35 0D"
+    },
+    {
+      "name": "InputTV",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 53 4C 49 31 32 0D"
+    },
+    {
+      "name": "InputNetwork",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 53 4C 49 32 42 0D"
+    },
+    {
+      "name": "InputBluetooth",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 53 4C 49 32 45 0D"
+    },
+    {
+      "name": "InputTuner",
+      "transport": "tcp",
+      "tcpFormat": "hex",
+      "tcpPayload": "49 53 43 50 00 00 00 10 00 00 00 08 01 00 00 00 21 31 53 4C 49 32 34 0D"
+    }
+  ]
+}

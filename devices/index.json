@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "templates": [
+    {
+      "id": "denon-avr",
+      "name": "Denon / Marantz AV receiver",
+      "manufacturer": "Denon",
+      "model": "AVR-X / SR / NR (2016 and later)",
+      "category": "receiver",
+      "description": "Network control of Denon and Marantz AV receivers over Telnet (port 23) or HTTP (port 8080).",
+      "transports": [
+        "tcp",
+        "http",
+        "ir"
+      ],
+      "file": "devices/denon-avr.json"
+    },
+    {
+      "id": "kodi",
+      "name": "Kodi",
+      "manufacturer": "Kodi",
+      "model": "Kodi 19 and later",
+      "category": "media",
+      "description": "Kodi media centers over JSON-RPC (HTTP, port 8080 by default).",
+      "transports": [
+        "http",
+        "bt"
+      ],
+      "file": "devices/kodi.json"
+    },
+    {
+      "id": "onkyo-eiscp",
+      "name": "Onkyo / Pioneer / Integra AV receiver",
+      "manufacturer": "Onkyo",
+      "model": "Network receiver (eISCP)",
+      "category": "receiver",
+      "description": "Onkyo, Pioneer (2016 and later) and Integra network receivers over eISCP (TCP port 60128).",
+      "transports": [
+        "tcp",
+        "ir"
+      ],
+      "file": "devices/onkyo-eiscp.json"
+    },
+    {
+      "id": "sonos",
+      "name": "Sonos speaker",
+      "manufacturer": "Sonos",
+      "model": "Sonos (S1 and S2)",
+      "category": "speaker",
+      "description": "Sonos speakers over their local UPnP control (HTTP, port 1400).",
+      "transports": [
+        "http"
+      ],
+      "file": "devices/sonos.json"
+    },
+    {
+      "id": "sony-bravia-ircc",
+      "name": "Sony Bravia TV",
+      "manufacturer": "Sony",
+      "model": "Bravia (2013 and later)",
+      "category": "tv",
+      "description": "Sony Bravia TVs over IP control (IRCC remote codes and power, with a pre-shared key), or with the sony-bravia plugin.",
+      "transports": [
+        "plugin",
+        "http",
+        "ir"
+      ],
+      "file": "devices/sony-bravia-ircc.json",
+      "plugin": "sony-bravia"
+    },
+    {
+      "id": "yamaha-musiccast",
+      "name": "Yamaha MusicCast",
+      "manufacturer": "Yamaha",
+      "model": "MusicCast receiver / speaker",
+      "category": "receiver",
+      "description": "Yamaha MusicCast receivers, soundbars and speakers over the Extended Control HTTP API.",
+      "transports": [
+        "http",
+        "ir"
+      ],
+      "file": "devices/yamaha-musiccast.json"
+    }
+  ]
+}

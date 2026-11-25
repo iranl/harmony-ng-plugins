@@ -1,0 +1,394 @@
+{
+  "schema": 1,
+  "id": "sony-bravia-ircc",
+  "name": "Sony Bravia TV",
+  "manufacturer": "Sony",
+  "model": "Bravia (2013 and later)",
+  "category": "tv",
+  "icon": "tv",
+  "description": "Sony Bravia TVs over IP control (IRCC remote codes and power, with a pre-shared key), or with the sony-bravia plugin.",
+  "transports": {
+    "plugin": {
+      "label": "sony-bravia plugin (also Wake-on-LAN and text)",
+      "id": "sony-bravia",
+      "config": {
+        "host": "{{host}}",
+        "psk": "{{psk}}"
+      },
+      "default_commands": true
+    },
+    "http": {
+      "label": "IP control (HTTP)",
+      "default": true,
+      "connection": {
+        "netHost": "{{host}}",
+        "netPort": 80,
+        "httpHeaders": [
+          {
+            "name": "X-Auth-PSK",
+            "value": "{{psk}}"
+          }
+        ]
+      }
+    },
+    "ir": {
+      "label": "Infrared (learn the codes later)"
+    }
+  },
+  "setup": {
+    "message": "On the TV, open Settings > Network > Home network > IP control: set Authentication to Normal and Pre-Shared Key, and enter a key. Turn on Remote start to power the TV on over the network.",
+    "fields": [
+      {
+        "key": "host",
+        "label": "IP address",
+        "type": "string",
+        "required": true,
+        "placeholder": "192.168.1.50"
+      },
+      {
+        "key": "psk",
+        "label": "Pre-shared key",
+        "type": "password",
+        "required": true
+      }
+    ]
+  },
+  "commands": [
+    {
+      "name": "PowerOn",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/system",
+      "httpBody": "{\"method\":\"setPowerStatus\",\"id\":55,\"params\":[{\"status\":true}],\"version\":\"1.0\"}"
+    },
+    {
+      "name": "PowerOff",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/system",
+      "httpBody": "{\"method\":\"setPowerStatus\",\"id\":55,\"params\":[{\"status\":false}],\"version\":\"1.0\"}"
+    },
+    {
+      "name": "PowerToggle",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAQAAAAEAAAAVAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "VolumeUp",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAQAAAAEAAAASAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "VolumeDown",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAQAAAAEAAAATAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "Mute",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAQAAAAEAAAAUAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "ChannelUp",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAQAAAAEAAAAQAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "ChannelDown",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAQAAAAEAAAARAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "DirectionUp",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAQAAAAEAAAB0Aw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "DirectionDown",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAQAAAAEAAAB1Aw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "DirectionLeft",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAQAAAAEAAAA0Aw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "DirectionRight",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAQAAAAEAAAAzAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "Select",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAQAAAAEAAABlAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "Home",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAQAAAAEAAABgAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "Back",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAgAAAJcAAAAjAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "Input",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAQAAAAEAAAAlAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "HDMI 1",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAgAAABoAAABaAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "HDMI 2",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAgAAABoAAABbAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "HDMI 3",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAgAAABoAAABcAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "HDMI 4",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAgAAABoAAABdAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "Play",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAgAAAJcAAAAaAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "Pause",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAgAAAJcAAAAZAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "Stop",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAgAAAJcAAAAYAw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "Options",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAgAAAJcAAAA2Aw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    },
+    {
+      "name": "Netflix",
+      "transport": "http",
+      "httpMethod": "POST",
+      "httpPath": "/sony/IRCC",
+      "httpContentType": "text/xml; charset=UTF-8",
+      "httpBody": "<?xml version=\"1.0\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:X_SendIRCC xmlns:u=\"urn:schemas-sony-com:service:IRCC:1\"><IRCCCode>AAAAAgAAABoAAAB8Aw==</IRCCCode></u:X_SendIRCC></s:Body></s:Envelope>",
+      "httpHeaders": [
+        {
+          "name": "SOAPACTION",
+          "value": "\"urn:schemas-sony-com:service:IRCC:1#X_SendIRCC\""
+        }
+      ]
+    }
+  ]
+}

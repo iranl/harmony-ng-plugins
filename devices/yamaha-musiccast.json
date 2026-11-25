@@ -1,0 +1,137 @@
+{
+  "schema": 1,
+  "id": "yamaha-musiccast",
+  "name": "Yamaha MusicCast",
+  "manufacturer": "Yamaha",
+  "model": "MusicCast receiver / speaker",
+  "category": "receiver",
+  "icon": "receiver",
+  "description": "Yamaha MusicCast receivers, soundbars and speakers over the Extended Control HTTP API.",
+  "transports": {
+    "http": {
+      "label": "HTTP",
+      "default": true,
+      "connection": {
+        "netHost": "{{host}}",
+        "netPort": 80
+      }
+    },
+    "ir": {
+      "label": "Infrared (learn the codes later)"
+    }
+  },
+  "setup": {
+    "message": "Enter the device's IP address (shown in the MusicCast app under the device's settings).",
+    "fields": [
+      {
+        "key": "host",
+        "label": "IP address",
+        "type": "string",
+        "required": true,
+        "placeholder": "192.168.1.50"
+      }
+    ]
+  },
+  "commands": [
+    {
+      "name": "PowerOn",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setPower?power=on"
+    },
+    {
+      "name": "PowerOff",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setPower?power=standby"
+    },
+    {
+      "name": "PowerToggle",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setPower?power=toggle"
+    },
+    {
+      "name": "VolumeUp",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setVolume?volume=up"
+    },
+    {
+      "name": "VolumeDown",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setVolume?volume=down"
+    },
+    {
+      "name": "MuteOn",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setMute?enable=true"
+    },
+    {
+      "name": "MuteOff",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setMute?enable=false"
+    },
+    {
+      "name": "InputHDMI1",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setInput?input=hdmi1"
+    },
+    {
+      "name": "InputHDMI2",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setInput?input=hdmi2"
+    },
+    {
+      "name": "InputHDMI3",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setInput?input=hdmi3"
+    },
+    {
+      "name": "InputTV",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setInput?input=tv"
+    },
+    {
+      "name": "InputBluetooth",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setInput?input=bluetooth"
+    },
+    {
+      "name": "InputNetRadio",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setInput?input=net_radio"
+    },
+    {
+      "name": "InputSpotify",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setInput?input=spotify"
+    },
+    {
+      "name": "InputAirPlay",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/main/setInput?input=airplay"
+    },
+    {
+      "name": "Play",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/netusb/setPlayback?playback=play"
+    },
+    {
+      "name": "Pause",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/netusb/setPlayback?playback=pause"
+    },
+    {
+      "name": "Stop",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/netusb/setPlayback?playback=stop"
+    },
+    {
+      "name": "NextTrack",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/netusb/setPlayback?playback=next"
+    },
+    {
+      "name": "PreviousTrack",
+      "transport": "http",
+      "httpPath": "/YamahaExtendedControl/v1/netusb/setPlayback?playback=previous"
+    }
+  ]
+}
