@@ -2,9 +2,8 @@
  * Header only: #include "plugin.h" (build_plugins.sh passes -I common). Every function is static,
  * so a plugin carries only what it calls (-ffunction-sections -Wl,--gc-sections).
  *
- * The Hub's stock uClibc 0.9.30 has no __ctype_* tables: nothing here calls <ctype.h>, and a
- * plugin must not either (build_plugins.sh refuses a binary that imports them).
- * No threads: the Hub kernel has no futex. One poll() loop per plugin. */
+ * The plugins run on the Linux 6.18 Hub system (HarmonyNG 4, shared uClibc-ng): <ctype.h>,
+ * threads and blocking waits work. One poll() loop per plugin is still the smallest design. */
 #ifndef HNG_PLUGIN_H
 #define HNG_PLUGIN_H
 

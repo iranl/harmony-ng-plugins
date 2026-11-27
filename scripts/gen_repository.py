@@ -30,7 +30,8 @@ def main():
         archive = os.path.join(archives, f'{pid}-plugin.tar.gz')
         if not os.path.isfile(archive):
             sys.exit(f'missing archive {archive}')
-        entry = {k: m[k] for k in ('id', 'name', 'version', 'author', 'description') if k in m}
+        # min_harmony_version too: an older Hub decides before it downloads the archive
+        entry = {k: m[k] for k in ('id', 'name', 'version', 'min_harmony_version', 'author', 'description') if k in m}
         entry['homepage'] = f'{BASE}/tree/main/{pid}'
         entry['download_url'] = f'{BASE}/releases/download/{pid}-v{m["version"]}/{pid}-plugin.tar.gz'
         with open(archive, 'rb') as f:

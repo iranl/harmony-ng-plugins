@@ -1,7 +1,8 @@
 {
   "id": "switch2-wake",
   "name": "Nintendo Switch 2 BT Wake",
-  "version": "1.1.0",
+  "version": "1.2.0",
+  "min_harmony_version": "4.0.0",
   "author": "Harmony-NG Community",
   "description": "Wake a Nintendo Switch 2 from sleep with the Bluetooth LE wake advertisement of a paired Joy-Con 2 or Pro Controller 2",
   "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/switch2-wake",

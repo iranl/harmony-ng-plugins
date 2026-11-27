@@ -1,7 +1,8 @@
 {
   "id": "ps5-wake",
   "name": "PlayStation 5 BT Wake",
-  "version": "1.2.0",
+  "version": "1.3.0",
+  "min_harmony_version": "4.0.0",
   "author": "Harmony-NG Community",
   "description": "Wake PlayStation 4 and PlayStation 5 consoles over Bluetooth via DualSense/DualShock controller emulation",
   "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/ps5-wake",

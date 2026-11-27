@@ -2,6 +2,7 @@
   "id": "my-plugin",
   "name": "My Plugin",
   "version": "0.1.0",
+  "min_harmony_version": "4.0.0",
   "author": "Your Name",
   "description": "Template of a Harmony-NG plugin: one HTTP POST per key to the device.",
   "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/template",
