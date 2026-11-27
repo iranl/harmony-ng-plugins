@@ -103,14 +103,10 @@ $CC $CFLAGS -I"$PLUGINS_ROOT/common" "$PLUGINS_ROOT/android-tv/android_tv.c" -o 
 $STRIP "$PLUGINS_ROOT/android-tv/bin/android_tv"
 echo "[+] android_tv binary built: $(ls -lh "$PLUGINS_ROOT/android-tv/bin/android_tv" | awk '{print $5}')"
 
-# The Hub's stock uClibc 0.9.30 has no __ctype_*_loc: a binary importing one (any <ctype.h>
-# call) starts, then dies at that first call, as android-tv did on PIN entry
+# The plugins run on the Linux 6.18 Hub system (shared uClibc-ng 1.0.24, the toolchain's own C
+# library): the stock uClibc 0.9.30 limits (no <ctype.h>, __ctype_*_loc) are gone
 for b in roku-ecp/bin/roku_ecp ps5-wake/bin/ps5_wake ps5-wake/bin/ps5_page switch2-wake/bin/switch2_wake wol/bin/wol \
          sony-bravia/bin/sony_bravia samsung-tv/bin/samsung_tv lg-webos/bin/lg_webos android-tv/bin/android_tv; do
-    if mips-buildroot-linux-uclibc-readelf --dyn-syms -W "$PLUGINS_ROOT/$b" | grep -q '__ctype_'; then
-        echo "[!] $b imports __ctype_* symbols the Hub's uClibc lacks (drop the <ctype.h> calls)" >&2
-        exit 1
-    fi
     # A library other than libc must be in the manifest's requires_libs: the Hub then refuses
     # the install on firmware without it, instead of a plugin that cannot start
     for lib in $(mips-buildroot-linux-uclibc-readelf -d "$PLUGINS_ROOT/$b" | sed -n 's/.*NEEDED.*\[\(.*\)\]/\1/p'); do
