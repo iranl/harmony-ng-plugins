@@ -35,10 +35,12 @@ CI builds and tests it with the other plugins, so it stays correct.
 
 - Stay in the foreground: the Hub starts the binary, restarts it when it exits, stops it with
   SIGTERM. No fork into the background, no pid file.
-- One thread and one `poll()` loop: the Hub kernel has no futex (a waiting thread spins at
-  100 % CPU). Network calls with short timeouts: the socket queue fills while the plugin waits.
-- No `<ctype.h>` calls (`isdigit`, `tolower`, ...): the Hub's uClibc lacks them and the plugin
-  dies at the first call. `build_plugins.sh` refuses such a binary.
+- One `poll()` loop is the smallest design (threads work on the Linux 6.18 Hub system, but
+  every thread costs RAM). Network calls with short timeouts: the socket queue fills while the
+  plugin waits.
+- Set `"min_harmony_version": "4.0.0"` in `manifest.json`: the plugins link the Linux 6.18
+  system's shared C library, and an older Hub refuses them instead of installing a plugin that
+  cannot start.
 - State that must survive an update in `plg_data_dir()` (`/data/harmony/plugin-data/<id>`):
   it is flash, write only what changed (`plg_write_file` does). Runtime files in `/tmp/plugins`.
 - A remote button sends press, repeats and release: act once for one-shot commands, release a

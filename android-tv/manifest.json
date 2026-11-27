@@ -1,7 +1,8 @@
 {
   "id": "android-tv",
   "name": "Android TV / Google TV Remote (v2)",
-  "version": "1.4.0",
+  "version": "1.5.0",
+  "min_harmony_version": "4.0.0",
   "author": "Harmony-NG Community",
   "description": "Control Android TV and Google TV devices over local network via Google TV Remote protocol v2 (TLS/PIN Pairing). PowerOn wakes a TV off the network with Wake-on-LAN.",
   "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/android-tv",

@@ -271,8 +271,7 @@ static const key_mapping_t s_key_map[] = {
     {NULL, 0}
 };
 
-/* No <ctype.h>: the toolchain's ctype macros import __ctype_b_loc, which the Hub's uClibc
- * 0.9.30 lacks, and the plugin died at its first call */
+/* ASCII only, whatever the C locale */
 static int ascii_lower(int c) {
     return (c >= 'A' && c <= 'Z') ? c + ('a' - 'A') : c;
 }

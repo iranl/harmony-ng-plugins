@@ -8,9 +8,9 @@
  *   - held on the device (a key down until release): see samsung-tv for the hold deadline.
  * And a pairing (manifest "pairing"), answered with plg_status().
  *
- * Rules of the Hub (docs/PLUGINS.md in harmony-ng): stay in the foreground, one poll() loop
- * and no threads (no futex), no <ctype.h> calls, keep the receive loop short (bounded network
- * timeouts), state that must survive an update in plg_data_dir(). */
+ * Rules of the Hub (docs/PLUGINS.md in harmony-ng): stay in the foreground, one poll() loop,
+ * keep the receive loop short (bounded network timeouts), state that must survive an update in
+ * plg_data_dir(). */
 #include "plugin.h"
 #include "wol.h"
 
