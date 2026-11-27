@@ -1,8 +1,7 @@
 {
   "id": "roku-ecp",
   "name": "Roku ECP Controller",
-  "version": "1.3.0",
-  "min_harmony_version": "4.0.0",
+  "version": "1.2.2",
   "author": "Harmony-NG Community",
   "description": "Control Roku streaming boxes and Roku TVs over local Wi-Fi via External Control Protocol (ECP)",
   "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/roku-ecp",
@@ -15,7 +14,7 @@
     "device_type": "roku",
     "display_name": "Roku Player / TV",
     "config_fields": [
-      { "key": "ip_address", "label": "IP Address", "type": "string", "placeholder": "192.168.1.50" },
+      { "key": "ip_address", "label": "Hostname / IP Address", "type": "string", "placeholder": "192.168.1.50" },
       { "key": "port", "label": "Port", "type": "number", "default": 8060 }
     ],
     "default_commands": [

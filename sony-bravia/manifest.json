@@ -1,8 +1,7 @@
 {
   "id": "sony-bravia",
   "name": "Sony Bravia TV",
-  "version": "1.1.0",
-  "min_harmony_version": "4.0.0",
+  "version": "1.0.1",
   "author": "Harmony-NG Community",
   "description": "Control Sony Bravia TVs (2013 and later) with their IP control API and a pre-shared key: every remote key, power on and off, HDMI inputs, text, and Wake-on-LAN.",
   "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/sony-bravia",
@@ -17,7 +16,7 @@
     "config_fields": [
       {
         "key": "host",
-        "label": "IP Address",
+        "label": "Hostname / IP Address",
         "type": "string",
         "placeholder": "192.168.1.90"
       },

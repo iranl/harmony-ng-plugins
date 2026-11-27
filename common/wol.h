@@ -56,9 +56,12 @@ PLG_FN int wol_send(const unsigned char mac[6], const char *bcast, int port) {
     return sent ? 0 : -1;
 }
 
-/* The MAC the Hub's ARP table holds for ip (a complete entry), "" when none */
-PLG_FN int wol_arp_lookup(const char *ip, char mac_out[18]) {
+/* The MAC the Hub's ARP table holds for host (an address or a host name; a complete entry),
+ * "" when none */
+PLG_FN int wol_arp_lookup(const char *host, char mac_out[18]) {
     mac_out[0] = '\0';
+    char ip[16];
+    if (plg_resolve_ipv4_text(host, ip) != 0) return -1;
     FILE *f = fopen("/proc/net/arp", "r");
     if (!f) return -1;
     char line[256];
@@ -77,25 +80,27 @@ PLG_FN int wol_arp_lookup(const char *ip, char mac_out[18]) {
     return mac_out[0] ? 0 : -1;
 }
 
-/* An ARP entry for ip: a UDP datagram to a closed port makes the kernel resolve the address */
-PLG_FN void wol_arp_probe(const char *ip) {
+/* An ARP entry for host (an address or a host name): a UDP datagram to a closed port makes
+ * the kernel resolve the address */
+PLG_FN void wol_arp_probe(const char *host) {
     struct sockaddr_in sin;
     memset(&sin, 0, sizeof(sin));
     sin.sin_family = AF_INET;
     sin.sin_port = htons(9);
-    if (plg_parse_ipv4(ip, &sin.sin_addr) != 0) return;
+    if (plg_resolve_ipv4(host, &sin.sin_addr) != 0) return;
     int fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (fd < 0) return;
     sendto(fd, "", 0, 0, (struct sockaddr *)&sin, sizeof(sin));
     close(fd);
 }
 
-/* The MAC learned for ip, in <data_dir>/mac-<ip> */
+/* The MAC learned for a host as configured (address or name), in <data_dir>/mac-<host>: a
+ * device set by name keeps its MAC when its address changes */
 PLG_FN void wol_mac_path(const char *data_dir, const char *ip, char *out, size_t sz) {
     snprintf(out, sz, "%s/mac-%s", data_dir, ip);
 }
 
-/* Remembers the MAC of ip (from the ARP table) while the device answers: call after a
+/* Remembers the MAC of ip, an address or a host name (from the ARP table) while the device answers: call after a
  * successful connection. Written only when it changed. */
 PLG_FN void wol_learn(const char *data_dir, const char *ip) {
     char mac[18], path[200];
@@ -106,7 +111,7 @@ PLG_FN void wol_learn(const char *data_dir, const char *ip) {
     if (plg_write_file(path, mac, 0644) == 0) printf("[*] learned MAC %s of %s for Wake-on-LAN\n", mac, ip);
 }
 
-/* Wakes the device at ip: the configured MAC (config_mac, may be empty), else the one learned.
+/* Wakes the device at ip (an address or a host name): the configured MAC (config_mac, may be empty), else the one learned.
  * bcast and port as wol_send. 0 when a packet went out. */
 PLG_FN int wol_wake(const char *data_dir, const char *ip, const char *config_mac, const char *bcast, int port) {
     unsigned char mac[6];

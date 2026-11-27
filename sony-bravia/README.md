@@ -8,7 +8,7 @@ pre-shared key. Every remote key, power on and off, HDMI inputs, volume, text, W
 1. On the TV: **Settings > Network > Home network > IP control**: Authentication **Normal and
    Pre-Shared Key**, and a **Pre-Shared Key** (for example `0000`). Turn on **Remote start**
    (Settings > Network) so the TV can be turned on from standby.
-2. Device Studio > Add Device > **Sony Bravia TV**. Enter the TV's IP address and the same key.
+2. Device Studio > Add Device > **Sony Bravia TV**. Enter the TV's host name or IP address and the same key.
 
 No pairing: the key is the authentication. A wrong key is logged as refused.
 

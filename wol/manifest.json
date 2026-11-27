@@ -1,8 +1,7 @@
 {
   "id": "wol",
   "name": "Wake-on-LAN",
-  "version": "1.1.0",
-  "min_harmony_version": "4.0.0",
+  "version": "1.0.1",
   "author": "Harmony-NG Community",
   "description": "Turn on PCs, NAS, TVs and consoles with Wake-on-LAN. Add a Wake-on-LAN device, or give any device a command with keyCode PLUGIN:wol:<MAC>.",
   "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/wol",
@@ -34,7 +33,7 @@
       },
       {
         "key": "host",
-        "label": "IP Address (optional, for Find MAC)",
+        "label": "Hostname / IP Address (optional, for Find MAC)",
         "type": "string",
         "placeholder": "192.168.1.20"
       },

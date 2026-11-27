@@ -85,9 +85,16 @@ try:
     os.unlink(STATUS)
 except OSError:
     pass
-send({'plugin_id': 'wol', 'command': 'pair', 'action': 'start_pair', 'host': 'not-an-ip'})
+send({'plugin_id': 'wol', 'command': 'pair', 'action': 'start_pair', 'host': 'not/an address'})
 st = status()
 check('Find MAC refuses a bad address', st and st['ok'] is False and st['stage'] == 'error')
+
+# a host name is resolved by the Hub (here from the hosts file); the messages name it as typed
+os.unlink(STATUS)
+send({'plugin_id': 'wol', 'command': 'pair', 'action': 'start_pair', 'host': 'localhost'})
+st = status()
+check('Find MAC takes a host name (localhost): no ARP entry, ends with an error naming it',
+      st and st['ok'] is False and st['message'].startswith('No answer from localhost'))
 
 os.unlink(STATUS)
 send({'plugin_id': 'wol', 'command': 'pair', 'action': 'start_pair', 'host': '127.0.0.1'})

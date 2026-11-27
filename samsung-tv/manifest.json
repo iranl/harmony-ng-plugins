@@ -2,7 +2,6 @@
   "id": "samsung-tv",
   "name": "Samsung Smart TV (Tizen)",
   "version": "1.1.0",
-  "min_harmony_version": "4.0.0",
   "author": "Harmony-NG Community",
   "description": "Control Samsung Smart TVs (Tizen, 2016 and later) over the local network: every remote key with holds, apps, text, power state, and Wake-on-LAN for PowerOn.",
   "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/samsung-tv",
@@ -30,7 +29,7 @@
     "config_fields": [
       {
         "key": "host",
-        "label": "IP Address",
+        "label": "Hostname / IP Address",
         "type": "string",
         "placeholder": "192.168.1.70"
       },
@@ -45,6 +44,12 @@
         "label": "MAC Address (optional, for Wake-on-LAN)",
         "type": "string",
         "placeholder": "learned while the TV is on"
+      },
+      {
+        "key": "hdmi_via_ir",
+        "label": "HDMI via IR (2018 and later TVs ignore the HDMI keys over the network)",
+        "type": "boolean",
+        "default": false
       }
     ],
     "default_commands": [
@@ -214,19 +219,27 @@
       },
       {
         "name": "HDMI 1",
-        "keyCode": "PLUGIN:samsung-tv:HDMI 1"
+        "keyCode": "PLUGIN:samsung-tv:HDMI 1",
+        "irKeyCode": "G:GoVideoO1 32 Bit:()(0xE0E09768)():3",
+        "irWhen": "hdmi_via_ir"
       },
       {
         "name": "HDMI 2",
-        "keyCode": "PLUGIN:samsung-tv:HDMI 2"
+        "keyCode": "PLUGIN:samsung-tv:HDMI 2",
+        "irKeyCode": "G:GoVideoO1 32 Bit:()(0xE0E07D82)():3",
+        "irWhen": "hdmi_via_ir"
       },
       {
         "name": "HDMI 3",
-        "keyCode": "PLUGIN:samsung-tv:HDMI 3"
+        "keyCode": "PLUGIN:samsung-tv:HDMI 3",
+        "irKeyCode": "G:GoVideoO1 32 Bit:()(0xE0E043BC)():3",
+        "irWhen": "hdmi_via_ir"
       },
       {
         "name": "HDMI 4",
-        "keyCode": "PLUGIN:samsung-tv:HDMI 4"
+        "keyCode": "PLUGIN:samsung-tv:HDMI 4",
+        "irKeyCode": "G:GoVideoO1 32 Bit:()(0xE0E0A35C)():3",
+        "irWhen": "hdmi_via_ir"
       },
       {
         "name": "Exit",

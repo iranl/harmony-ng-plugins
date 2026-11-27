@@ -154,7 +154,10 @@ PLG_FN int ws_recv(ws_t *w, char *out, size_t out_sz) {
             if (n > sizeof(c) || ws_io_read(w, c, (size_t)n) != 0) goto closed;
             if (op == 8) goto closed;
             if (op == 9 && ws_send_frame(w, 10, c, (size_t)n) != 0) goto closed;
-            if (op == 10 && len == 0) {
+            /* A ping or pong between messages is the whole read: waiting here for a next frame
+             * that is not coming ran into the socket timeout and closed a healthy connection
+             * (a Samsung TV pings every ~6 s). Inside a fragmented message, read on. */
+            if ((op == 9 || op == 10) && len == 0) {
                 out[0] = '\0';
                 return 0;
             }

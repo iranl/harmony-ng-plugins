@@ -89,6 +89,12 @@ try:
     p.send('text:hello', config=cfg)
     check('text -> setTextForm', TV.get(TV.rpc) == ('/sony/appControl', 'setTextForm', {'text': 'hello'}))
 
+    # the address may be a host name the Hub resolves (hosts file, DNS), not only an IPv4 address
+    p.send('Home', config=dict(cfg, host='localhost'))
+    check('host name (localhost) -> IRCC sent', TV.get(TV.ircc) == KNOWN['Home'])
+    p.send('Home', config=dict(cfg, host='bad/name'))
+    check('a host name with other characters is refused, nothing sent', TV.get(TV.ircc, 0.6) is None)
+
     p.send('Home', config=dict(cfg, psk='wrong'))
     check('wrong PSK: refusal logged', wait_for(lambda: p.logged('refused the pre-shared key')))
 

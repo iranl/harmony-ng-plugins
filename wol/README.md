@@ -6,7 +6,7 @@ sent 3 times).
 ## Two ways to use it
 
 **A Wake-on-LAN device.** Device Studio > Add Device > **Wake-on-LAN Device**. Enter the MAC
-address, or the device's IP address and press **Find MAC** (the device must be on: the Hub
+address, or the device's host name or IP address and press **Find MAC** (the device must be on: the Hub
 reads its MAC from its ARP table). Its `PowerOn` command wakes it. Put it in an activity's
 start sequence next to the device's own commands.
 
@@ -26,7 +26,7 @@ router that drops `255.255.255.255`).
 | Field | Use |
 |---|---|
 | `mac` | MAC address (`AA:BB:CC:DD:EE:FF`, `AA-BB-...` or `AABBCC...`) |
-| `host` | IP address, for Find MAC; also used to look up the MAC when `mac` is empty |
+| `host` | Host name or IP address, for Find MAC; also used to look up the MAC when `mac` is empty |
 | `broadcast` | Broadcast address, default `255.255.255.255` |
 
 A held remote button wakes once. The device must have Wake-on-LAN enabled (BIOS/UEFI, network

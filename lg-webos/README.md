@@ -5,8 +5,8 @@ volume, channels, inputs, apps, text, power, Wake-on-LAN.
 
 ## Setup
 
-1. Device Studio > Add Device > **LG webOS TV**. Enter the TV's IP address (give the TV a fixed
-   address in your router).
+1. Device Studio > Add Device > **LG webOS TV**. Enter the TV's host name or IP address (give the TV
+   a fixed address or a DNS name in your router).
 2. Press **Pair with TV**, then choose **Accept** on the TV. The TV gives the Hub a client key,
    kept in `/data/harmony/plugin-data/lg-webos/key-<ip>`.
 

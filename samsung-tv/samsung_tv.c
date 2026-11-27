@@ -14,8 +14,10 @@
 #ifndef IDLE_PING_MS
 #define IDLE_PING_MS 20000  /* a send after this long without a frame checks the link first */
 #endif
-/* Base64 of the name the TV shows in its list of allowed devices ("Harmony Hub") */
-#define CLIENT_NAME_B64 "SGFybW9ueSBIdWI="
+/* The name the TV shows in its list of allowed devices: the Hub's name ("hub_name" in every
+ * datagram, the Hub Name in its settings), this on firmware that sends none */
+#define DEFAULT_HUB_NAME "Harmony-NG Hub"
+static char s_hub_name[64] = DEFAULT_HUB_NAME;
 
 static tls_conn_t s_tls;
 static ws_t s_ws = { .fd = -1 };
@@ -44,6 +46,91 @@ static void pair_end(int ok, const char *msg) {
     s_pair.host[0] = '\0';
 }
 
+/* Model year from the TV's info page ("model": "19_MUSEM_QTV" = 2019), 0 when unknown */
+static int model_year(const char *host) {
+    static char body[4096];
+    char model[64] = "";
+    if (plg_http(host, 8001, "GET", "/api/v2/", "", NULL, body, sizeof(body), 1500) == 200) {
+        plg_json_str(body, "model", model, sizeof(model));
+    }
+    if (model[0] < '0' || model[0] > '9' || model[1] < '0' || model[1] > '9' || model[2] != '_') return 0;
+    return 2000 + (model[0] - '0') * 10 + (model[1] - '0');
+}
+
+/* The TV allowed the Hub. TVs from 2018 on ignore the HDMI keys over the network: the pairing
+ * answer ticks "HDMI via IR" for them (the device's HDMI commands then go out as infrared from
+ * the Hub), and leaves it off for older ones; the user saves the device and may change it. */
+static void pair_done(const char *host) {
+    int year = model_year(host);
+    char msg[160];
+    if (year >= 2018) {
+        snprintf(msg, sizeof(msg), "Paired: the TV allowed the Hub. A %d model: HDMI inputs go out as infrared (HDMI via IR)", year);
+        plg_status(ID, 1, "start_pair", "done", msg, "\"hdmi_via_ir\": true");
+    } else if (year > 0) {
+        snprintf(msg, sizeof(msg), "Paired: the TV allowed the Hub (a %d model)", year);
+        plg_status(ID, 1, "start_pair", "done", msg, "\"hdmi_via_ir\": false");
+    } else {
+        snprintf(msg, sizeof(msg), "Paired: the TV allowed the Hub");
+        plg_status(ID, 1, "start_pair", "done", msg, "");
+    }
+    printf("[+] " ID ": %s\n", msg);
+    s_pair.host[0] = '\0';
+}
+
+/* The name as the TV wants it in the query: base64, URL-encoded (as samsungtvws sends it) */
+static void client_name_query(char *out, size_t out_sz) {
+    char b64[100];
+    plg_base64((const unsigned char *)s_hub_name, strlen(s_hub_name), b64, sizeof(b64));
+    size_t o = 0;
+    for (const char *c = b64; *c && o + 4 < out_sz; c++) {
+        if (*c == '+' || *c == '/' || *c == '=') o += (size_t)snprintf(out + o, out_sz - o, "%%%02X", (unsigned char)*c);
+        else out[o++] = *c;
+    }
+    out[o] = '\0';
+}
+
+/* The Hub's name of a datagram. A new one closes the connection: the next one registers under it
+ * (the TV sees a new client, asks once, then keeps its token). */
+static void take_hub_name(const char *buf) {
+    char name[64];
+    plg_json_str(buf, "hub_name", name, sizeof(name));
+    if (!name[0]) snprintf(name, sizeof(name), "%s", DEFAULT_HUB_NAME);
+    if (strcmp(name, s_hub_name) == 0) return;
+    snprintf(s_hub_name, sizeof(s_hub_name), "%s", name);
+    if (s_ws.fd >= 0) {
+        printf("[*] " ID ": the Hub is now \"%s\": the TV will ask to allow it once\n", s_hub_name);
+        tv_close();
+    }
+}
+
+/* The token the TV issued to this connection: data.token. Its connect event lists the clients it
+ * knows first, each with its own token ("clients":[{"attributes":{"name":...,"token":...}},...]),
+ * so the first "token" in the message is another client's: the list is skipped. Empty when the
+ * TV issued none (it accepted the token the plugin sent). */
+static void issued_token(const char *msg, char *out, size_t out_sz) {
+    const char *p = strstr(msg, "\"clients\":");
+    if (p) p = strchr(p, '[');
+    if (!p) {
+        plg_json_str(msg, "token", out, out_sz);
+        return;
+    }
+    int depth = 0, in_str = 0;
+    for (; *p; p++) {
+        if (in_str) {
+            if (*p == '\\' && p[1]) p++;
+            else if (*p == '"') in_str = 0;
+        } else if (*p == '"') {
+            in_str = 1;
+        } else if (*p == '[' || *p == '{') {
+            depth++;
+        } else if ((*p == ']' || *p == '}') && --depth == 0) {
+            p++;
+            break;
+        }
+    }
+    plg_json_str(p, "token", out, out_sz);
+}
+
 /* An event from the TV */
 static void on_msg(const char *msg) {
     char event[64];
@@ -51,14 +138,14 @@ static void on_msg(const char *msg) {
     if (strcmp(event, "ms.channel.connect") == 0) {
         s_tv.ready = 1;
         char token[64], path[200];
-        plg_json_str(msg, "token", token, sizeof(token));
+        issued_token(msg, token, sizeof(token));
         if (token[0]) {
             path_for("token", s_tv.host, path, sizeof(path));
             if (plg_write_file(path, token, 0600) == 0) printf("[*] " ID ": token of %s saved\n", s_tv.host);
         }
         printf("[+] " ID ": connected to %s:%d\n", s_tv.host, s_tv.port);
         wol_learn(s_data, s_tv.host);
-        if (s_pair.host[0] && strcmp(s_pair.host, s_tv.host) == 0) pair_end(1, "Paired: the TV allowed the Hub");
+        if (s_pair.host[0] && strcmp(s_pair.host, s_tv.host) == 0) pair_done(s_tv.host);
     } else if (strcmp(event, "ms.channel.unauthorized") == 0 || strcmp(event, "ms.channel.timeOut") == 0) {
         printf("[-] " ID ": %s refused the Hub (%s): allow it on the TV, or in its Device Connection Manager\n",
                s_tv.host, event);
@@ -101,7 +188,9 @@ static int tv_connect(const char *host, int port) {
     path_for("token", host, pin, sizeof(pin));
     plg_read_file(pin, token, sizeof(token));
     int secure = port != 8001;
-    snprintf(path, sizeof(path), "/api/v2/channels/samsung.remote.control?name=%s%s%s", CLIENT_NAME_B64,
+    char name_q[160];
+    client_name_query(name_q, sizeof(name_q));
+    snprintf(path, sizeof(path), "/api/v2/channels/samsung.remote.control?name=%s%s%s", name_q,
              secure && token[0] ? "&token=" : "", secure ? token : "");
     path_for("tv", host, pin, sizeof(pin));
     strncat(pin, ".pin", sizeof(pin) - strlen(pin) - 1);
@@ -236,13 +325,14 @@ static void send_text(const char *host, int port, const char *text) {
 static void handle(const char *buf) {
     plg_msg_t m;
     plg_parse(buf, &m);
+    take_hub_name(buf);
     int port = (int)plg_json_int(buf, "port", 8002);
     if (port <= 0 || port > 65535) port = 8002;
 
     if (plg_streq(m.action, "start_pair")) {
         struct in_addr a;
-        if (plg_parse_ipv4(m.host, &a) != 0) {
-            plg_status(ID, 0, "start_pair", "error", "Enter the TV's IPv4 address", "");
+        if (plg_resolve_ipv4(m.host, &a) != 0) {
+            plg_status(ID, 0, "start_pair", "error", "Enter the TV's address (IPv4 or a host name the Hub can resolve)", "");
             return;
         }
         long t = plg_json_int(buf, "timeout_s", 45);

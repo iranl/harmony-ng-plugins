@@ -260,8 +260,8 @@ static void handle(const char *buf) {
     plg_parse(buf, &m);
     if (plg_streq(m.action, "start_pair")) {
         struct in_addr a;
-        if (plg_parse_ipv4(m.host, &a) != 0) {
-            plg_status(ID, 0, "start_pair", "error", "Enter the TV's IPv4 address", "");
+        if (plg_resolve_ipv4(m.host, &a) != 0) {
+            plg_status(ID, 0, "start_pair", "error", "Enter the TV's address (IPv4 or a host name the Hub can resolve)", "");
             return;
         }
         long t = plg_json_int(buf, "timeout_s", 45);

@@ -36,6 +36,13 @@ class Conn:
         except OSError:
             self.closed = True
 
+    def ping(self, data=b'\0'):
+        """A ping from the TV (a Samsung pings every ~6 s with one zero byte)."""
+        try:
+            self._frame(9, data)
+        except OSError:
+            self.closed = True
+
     def close(self):
         self.closed = True
         try:

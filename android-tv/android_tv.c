@@ -886,7 +886,7 @@ static int ctl_connect_once(const char *host) {
     memset(&sin, 0, sizeof(sin));
     sin.sin_family = AF_INET;
     sin.sin_port = htons(ATV_PORT_CONTROL);
-    if (inet_pton(AF_INET, host, &sin.sin_addr) <= 0) {
+    if (plg_resolve_ipv4(host, &sin.sin_addr) != 0) {
         close(fd);
         return -1;
     }
@@ -1356,8 +1356,8 @@ static void do_start_pair(const char *host) {
     memset(&sin, 0, sizeof(sin));
     sin.sin_family = AF_INET;
     sin.sin_port = htons(ATV_PORT_PAIR);
-    if (inet_pton(AF_INET, host, &sin.sin_addr) <= 0) {
-        write_status_file("start", "error", "Invalid IP address", 0, 0, host);
+    if (plg_resolve_ipv4(host, &sin.sin_addr) != 0) {
+        write_status_file("start", "error", "Address not valid or host name not found", 0, 0, host);
         close(fd);
         return;
     }

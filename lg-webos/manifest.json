@@ -1,8 +1,7 @@
 {
   "id": "lg-webos",
   "name": "LG webOS TV",
-  "version": "1.1.0",
-  "min_harmony_version": "4.0.0",
+  "version": "1.0.1",
   "author": "Harmony-NG Community",
   "description": "Control LG webOS TVs (2014 and later) over the local network: remote buttons, volume, channels, apps, inputs, text, and Wake-on-LAN for PowerOn.",
   "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/lg-webos",
@@ -30,7 +29,7 @@
     "config_fields": [
       {
         "key": "host",
-        "label": "IP Address",
+        "label": "Hostname / IP Address",
         "type": "string",
         "placeholder": "192.168.1.80"
       },

@@ -19,7 +19,7 @@ Native C daemon for local Wi-Fi control of Roku streaming devices (Roku Streamin
 ## Configuration Fields
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `ip_address` | String | - | IP address of the Roku player or TV (required). |
+| `ip_address` | String | - | Host name or IP address of the Roku player or TV (required). |
 | `port` | Number | `8060` | Roku ECP port (standard: 8060). |
 
 ## Available Commands

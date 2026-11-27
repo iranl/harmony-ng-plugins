@@ -47,10 +47,10 @@ def mono_ms():
     return int(time.clock_gettime(time.CLOCK_MONOTONIC) * 1000)
 
 
-def send(command, action='tap', ts=None):
+def send(command, action='tap', ts=None, host='127.0.0.1'):
     msg = {'plugin_id': 'roku-ecp', 'command': command, 'action': action, 'value': 0,
            'ts': mono_ms() if ts is None else ts,
-           'config': {'ip_address': '127.0.0.1', 'port': PORT}}
+           'config': {'ip_address': host, 'port': PORT}}
     out.sendto(json.dumps(msg, separators=(',', ':')).encode(), SOCK)
 
 
@@ -72,6 +72,12 @@ def expect_none(wait=0.3):
 try:
     send('DirectionUp')
     expect('/keypress/Up')
+
+    # the address may be a host name the Hub resolves, not only an IPv4 address
+    send('DirectionUp', host='localhost')
+    expect('/keypress/Up')
+    send('DirectionUp', host='bad/name')
+    expect_none()
 
     # Hold: one keydown, repeats only keep it alive, one keyup
     send('Down', 'press')

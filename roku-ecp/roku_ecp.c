@@ -12,6 +12,7 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
+#include <netdb.h>
 #include <fcntl.h>
 #include <errno.h>
 
@@ -87,6 +88,25 @@ static void url_append(char *out, size_t out_sz, const char *s, const char *keep
     out[i] = '\0';
 }
 
+/* The IPv4 address of the Roku as configured: an address or a host name the Hub can resolve
+ * (hosts file, then DNS; letters, digits, '-' and '.' only). 0 when found. */
+static int resolve_ipv4(const char *host, struct in_addr *out) {
+    if (inet_pton(AF_INET, host, out) == 1) return 0;
+    if (!host[0] || host[0] == '-' || host[0] == '.' || strlen(host) > 253) return -1;
+    for (const char *p = host; *p; p++) {
+        char c = *p;
+        if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '.')) return -1;
+    }
+    struct addrinfo hints, *res = NULL;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    if (getaddrinfo(host, NULL, &hints, &res) != 0 || !res) return -1;
+    *out = ((struct sockaddr_in *)res->ai_addr)->sin_addr;
+    freeaddrinfo(res);
+    return 0;
+}
+
 /* POSTs /path (already encoded) and reads the status line. 0 when the Roku answered 2xx. */
 static int send_roku_http_post(const char *ip, int port, const char *path) {
     if (!ip || !ip[0] || !path || !path[0]) return -1;
@@ -95,8 +115,8 @@ static int send_roku_http_post(const char *ip, int port, const char *path) {
     memset(&sin, 0, sizeof(sin));
     sin.sin_family = AF_INET;
     sin.sin_port = htons((uint16_t)port);
-    if (inet_pton(AF_INET, ip, &sin.sin_addr) <= 0) {
-        printf("[-] roku-ecp: '%s' is not an IPv4 address\n", ip);
+    if (resolve_ipv4(ip, &sin.sin_addr) != 0) {
+        printf("[-] roku-ecp: '%s' is not an IPv4 address or a host name the Hub can resolve\n", ip);
         return -1;
     }
 

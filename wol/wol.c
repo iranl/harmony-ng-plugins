@@ -11,15 +11,17 @@
 #define FIND_MS 3000
 
 /* The running "Find MAC": its address and when it gives up */
-static struct { char ip[64]; uint64_t until_ms, next_probe_ms; } s_find;
+static struct { char ip[16]; char host[64]; uint64_t until_ms, next_probe_ms; } s_find;
 
 static void find_start(const char *ip) {
-    struct in_addr a;
-    if (plg_parse_ipv4(ip, &a) != 0) {
-        plg_status(ID, 0, "start_pair", "error", "Enter the device's IPv4 address (e.g. 192.168.1.20)", "");
+    char addr[16];
+    /* a host name is resolved once here: the probes and ARP reads then use the address */
+    if (plg_resolve_ipv4_text(ip, addr) != 0) {
+        plg_status(ID, 0, "start_pair", "error", "Enter the device's address (e.g. 192.168.1.20, or a host name the Hub can resolve)", "");
         return;
     }
-    snprintf(s_find.ip, sizeof(s_find.ip), "%s", ip);
+    snprintf(s_find.ip, sizeof(s_find.ip), "%s", addr);
+    snprintf(s_find.host, sizeof(s_find.host), "%s", ip);
     s_find.until_ms = plg_mono_ms() + FIND_MS;
     s_find.next_probe_ms = 0;
     printf("[*] " ID ": looking up the MAC of %s\n", ip);
@@ -33,13 +35,13 @@ static void find_step(void) {
         char cfg[64];
         snprintf(cfg, sizeof(cfg), "\"mac\": \"%s\"", mac);
         char msg[128];
-        snprintf(msg, sizeof(msg), "Found %s at %s", mac, s_find.ip);
+        snprintf(msg, sizeof(msg), "Found %s at %s", mac, s_find.host);
         plg_status(ID, 1, "start_pair", "done", msg, cfg);
         printf("[+] " ID ": %s\n", msg);
         s_find.ip[0] = '\0';
     } else if (now >= s_find.until_ms) {
         char msg[160];
-        snprintf(msg, sizeof(msg), "No answer from %s: turn the device on, check the address, and try again", s_find.ip);
+        snprintf(msg, sizeof(msg), "No answer from %s: turn the device on, check the address, and try again", s_find.host);
         plg_status(ID, 0, "start_pair", "error", msg, "");
         printf("[-] " ID ": %s\n", msg);
         s_find.ip[0] = '\0';

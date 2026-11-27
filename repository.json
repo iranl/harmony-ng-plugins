@@ -6,19 +6,19 @@
     {
       "id": "android-tv",
       "name": "Android TV / Google TV Remote (v2)",
-      "version": "1.4.0",
+      "version": "1.4.1",
       "author": "Harmony-NG Community",
       "description": "Control Android TV and Google TV devices over local network via Google TV Remote protocol v2 (TLS/PIN Pairing). PowerOn wakes a TV off the network with Wake-on-LAN.",
       "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/android-tv",
-      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/android-tv-v1.4.0/android-tv-plugin.tar.gz",
-      "sha256": "67c5601edf2e9f4805f735c942530e942ceecf9d7cd29316abd2c97d5c14e471",
+      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/android-tv-v1.4.1/android-tv-plugin.tar.gz",
+      "sha256": "98fccbcef4d02f03cd18533517d1eab1815f9c101f7ec077847ee99ce81e3284",
       "device_definition": {
         "device_type": "androidtv",
         "display_name": "Android TV / Google TV",
         "config_fields": [
           {
             "key": "host",
-            "label": "IP Address",
+            "label": "Hostname / IP Address",
             "type": "string",
             "placeholder": "192.168.1.60"
           },
@@ -284,19 +284,19 @@
     {
       "id": "lg-webos",
       "name": "LG webOS TV",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "Harmony-NG Community",
       "description": "Control LG webOS TVs (2014 and later) over the local network: remote buttons, volume, channels, apps, inputs, text, and Wake-on-LAN for PowerOn.",
       "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/lg-webos",
-      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/lg-webos-v1.0.0/lg-webos-plugin.tar.gz",
-      "sha256": "1cac854a0d43a1528fb891f4156a97bf284e602af244881f5e105fb8eb405b3a",
+      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/lg-webos-v1.0.1/lg-webos-plugin.tar.gz",
+      "sha256": "d0f48fb904fd0ed21bb9d3dd5a122f8dc7b5c7387b9a849fb41495b8cc50a197",
       "device_definition": {
         "device_type": "lgwebos",
         "display_name": "LG webOS TV",
         "config_fields": [
           {
             "key": "host",
-            "label": "IP Address",
+            "label": "Hostname / IP Address",
             "type": "string",
             "placeholder": "192.168.1.80"
           },
@@ -576,19 +576,19 @@
     {
       "id": "roku-ecp",
       "name": "Roku ECP Controller",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "author": "Harmony-NG Community",
       "description": "Control Roku streaming boxes and Roku TVs over local Wi-Fi via External Control Protocol (ECP)",
       "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/roku-ecp",
-      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/roku-ecp-v1.2.1/roku-ecp-plugin.tar.gz",
-      "sha256": "c52aa3006495e89d82826e3d7c8f1ea31d780fe0f0d277e7941805697cfe74ac",
+      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/roku-ecp-v1.2.2/roku-ecp-plugin.tar.gz",
+      "sha256": "fd3f0a53de24fcdb25b7154081d477339441c016c69713d33c3413c7ab95667e",
       "device_definition": {
         "device_type": "roku",
         "display_name": "Roku Player / TV",
         "config_fields": [
           {
             "key": "ip_address",
-            "label": "IP Address",
+            "label": "Hostname / IP Address",
             "type": "string",
             "placeholder": "192.168.1.50"
           },
@@ -670,19 +670,19 @@
     {
       "id": "samsung-tv",
       "name": "Samsung Smart TV (Tizen)",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": "Harmony-NG Community",
       "description": "Control Samsung Smart TVs (Tizen, 2016 and later) over the local network: every remote key with holds, apps, text, power state, and Wake-on-LAN for PowerOn.",
       "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/samsung-tv",
-      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/samsung-tv-v1.0.0/samsung-tv-plugin.tar.gz",
-      "sha256": "5b41b9224bf078e428068b6c9ffcfb62efd8dcc71acc8af210133f812f2b876f",
+      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/samsung-tv-v1.1.0/samsung-tv-plugin.tar.gz",
+      "sha256": "711b269dae8a9fd93efc8661439a2ae1aa1cf73f5050e0182cf5c959567db1d8",
       "device_definition": {
         "device_type": "samsungtv",
         "display_name": "Samsung Smart TV",
         "config_fields": [
           {
             "key": "host",
-            "label": "IP Address",
+            "label": "Hostname / IP Address",
             "type": "string",
             "placeholder": "192.168.1.70"
           },
@@ -697,6 +697,12 @@
             "label": "MAC Address (optional, for Wake-on-LAN)",
             "type": "string",
             "placeholder": "learned while the TV is on"
+          },
+          {
+            "key": "hdmi_via_ir",
+            "label": "HDMI via IR (2018 and later TVs ignore the HDMI keys over the network)",
+            "type": "boolean",
+            "default": false
           }
         ],
         "default_commands": [
@@ -866,19 +872,27 @@
           },
           {
             "name": "HDMI 1",
-            "keyCode": "PLUGIN:samsung-tv:HDMI 1"
+            "keyCode": "PLUGIN:samsung-tv:HDMI 1",
+            "irKeyCode": "G:GoVideoO1 32 Bit:()(0xE0E09768)():3",
+            "irWhen": "hdmi_via_ir"
           },
           {
             "name": "HDMI 2",
-            "keyCode": "PLUGIN:samsung-tv:HDMI 2"
+            "keyCode": "PLUGIN:samsung-tv:HDMI 2",
+            "irKeyCode": "G:GoVideoO1 32 Bit:()(0xE0E07D82)():3",
+            "irWhen": "hdmi_via_ir"
           },
           {
             "name": "HDMI 3",
-            "keyCode": "PLUGIN:samsung-tv:HDMI 3"
+            "keyCode": "PLUGIN:samsung-tv:HDMI 3",
+            "irKeyCode": "G:GoVideoO1 32 Bit:()(0xE0E043BC)():3",
+            "irWhen": "hdmi_via_ir"
           },
           {
             "name": "HDMI 4",
-            "keyCode": "PLUGIN:samsung-tv:HDMI 4"
+            "keyCode": "PLUGIN:samsung-tv:HDMI 4",
+            "irKeyCode": "G:GoVideoO1 32 Bit:()(0xE0E0A35C)():3",
+            "irWhen": "hdmi_via_ir"
           },
           {
             "name": "Exit",
@@ -930,19 +944,19 @@
     {
       "id": "sony-bravia",
       "name": "Sony Bravia TV",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "Harmony-NG Community",
       "description": "Control Sony Bravia TVs (2013 and later) with their IP control API and a pre-shared key: every remote key, power on and off, HDMI inputs, text, and Wake-on-LAN.",
       "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/sony-bravia",
-      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/sony-bravia-v1.0.0/sony-bravia-plugin.tar.gz",
-      "sha256": "39e703015577574cf8920ccb83d259a6225b5d5b7fab26dad95dec5b25b61404",
+      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/sony-bravia-v1.0.1/sony-bravia-plugin.tar.gz",
+      "sha256": "56bc952a3922806c5bd5a9f9bffc419ab50c04fd55dcebdc590039884661d38c",
       "device_definition": {
         "device_type": "sonybravia",
         "display_name": "Sony Bravia TV",
         "config_fields": [
           {
             "key": "host",
-            "label": "IP Address",
+            "label": "Hostname / IP Address",
             "type": "string",
             "placeholder": "192.168.1.90"
           },
@@ -1210,12 +1224,12 @@
     {
       "id": "wol",
       "name": "Wake-on-LAN",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "Harmony-NG Community",
       "description": "Turn on PCs, NAS, TVs and consoles with Wake-on-LAN. Add a Wake-on-LAN device, or give any device a command with keyCode PLUGIN:wol:<MAC>.",
       "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/wol",
-      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/wol-v1.0.0/wol-plugin.tar.gz",
-      "sha256": "a8d57747bda0e654245e097dc19298cd53e3f16de1c7a394514ea40d21e5c680",
+      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/wol-v1.0.1/wol-plugin.tar.gz",
+      "sha256": "d6f9cff38c531a6749fa7df40d4b55a30fb122d92c15e4a15422f030c4b95e49",
       "device_definition": {
         "device_type": "wol",
         "display_name": "Wake-on-LAN Device",
@@ -1228,7 +1242,7 @@
           },
           {
             "key": "host",
-            "label": "IP Address (optional, for Find MAC)",
+            "label": "Hostname / IP Address (optional, for Find MAC)",
             "type": "string",
             "placeholder": "192.168.1.20"
           },

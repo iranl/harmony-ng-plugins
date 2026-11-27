@@ -27,6 +27,7 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
+#include <netdb.h>
 
 #define PLG_FN static __attribute__((unused))
 
@@ -279,14 +280,57 @@ PLG_FN int plg_parse_ipv4(const char *host, struct in_addr *out) {
     return host && inet_pton(AF_INET, host, out) == 1 ? 0 : -1;
 }
 
-/* TCP connection to host:port (IPv4 address), connect bounded by timeout_ms, then reads and
+/* A host name as a device address may be written: letters, digits, '-' and '.', 1 to 253
+ * characters, not starting with '-' or '.' (also keeps it safe as part of a file name) */
+PLG_FN int plg_host_name_ok(const char *host) {
+    if (!host || !host[0] || host[0] == '-' || host[0] == '.') return 0;
+    size_t n = 0;
+    for (const char *p = host; *p; p++, n++) {
+        char c = *p;
+        if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '.')) return 0;
+    }
+    return n <= 253;
+}
+
+/* The IPv4 address of a device's host as configured: an address ("192.168.1.70") or a host
+ * name ("tv.home.lan", resolved by the Hub's resolver: hosts file, then DNS). 0 when found.
+ * A lookup can take a few seconds when the DNS server does not answer. */
+PLG_FN int plg_resolve_ipv4(const char *host, struct in_addr *out) {
+    if (plg_parse_ipv4(host, out) == 0) return 0;
+    if (!plg_host_name_ok(host)) return -1;
+    struct addrinfo hints, *res = NULL;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    if (getaddrinfo(host, NULL, &hints, &res) != 0 || !res) return -1;
+    int rc = -1;
+    for (struct addrinfo *ai = res; ai; ai = ai->ai_next) {
+        if (ai->ai_family == AF_INET && ai->ai_addr) {
+            *out = ((struct sockaddr_in *)ai->ai_addr)->sin_addr;
+            rc = 0;
+            break;
+        }
+    }
+    freeaddrinfo(res);
+    return rc;
+}
+
+/* plg_resolve_ipv4 as dotted text in out (16 bytes) */
+PLG_FN int plg_resolve_ipv4_text(const char *host, char out[16]) {
+    struct in_addr a;
+    out[0] = '\0';
+    if (plg_resolve_ipv4(host, &a) != 0) return -1;
+    return inet_ntop(AF_INET, &a, out, 16) ? 0 : -1;
+}
+
+/* TCP connection to host:port (IPv4 address or host name), connect bounded by timeout_ms, then reads and
  * writes bounded by the same time. -1 on error. */
 PLG_FN int plg_tcp_connect(const char *host, int port, int timeout_ms) {
     struct sockaddr_in sin;
     memset(&sin, 0, sizeof(sin));
     sin.sin_family = AF_INET;
     sin.sin_port = htons((uint16_t)port);
-    if (plg_parse_ipv4(host, &sin.sin_addr) != 0) return -1;
+    if (plg_resolve_ipv4(host, &sin.sin_addr) != 0) return -1;
     int fd = socket(AF_INET, SOCK_STREAM, 0);
     if (fd < 0) return -1;
     int one = 1;

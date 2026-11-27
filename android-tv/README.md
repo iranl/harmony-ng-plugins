@@ -28,7 +28,7 @@ Designed for **100% protocol and feature parity** with [`androidtvremote2`](http
 
 1. Ensure your Android TV / Google TV is powered on and connected to the same Wi-Fi / local network as your Harmony Hub.
 2. In the Harmony-NG WebUI (**Devices Studio**), click **Add Device** and select **Android TV / Google TV (Plugin)**.
-3. Enter your TV's local IP address (e.g. `192.168.1.60`).
+3. Enter your TV's host name or local IP address (e.g. `shield.home.lan` or `192.168.1.60`).
 4. Click **Pair with TV** (or send the `Pair` command):
    - The plugin initiates the pairing handshake on port `6467`.
    - Your TV screen displays a **6-character PIN code** (e.g. `B83F1A`).
