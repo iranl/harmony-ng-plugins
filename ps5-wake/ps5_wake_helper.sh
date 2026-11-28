@@ -7,7 +7,6 @@ HOST_MAC="$1"
 CTRL_MAC="$2"
 LOCK=/tmp/hub_btstack.lock
 SPOOF_PSR=/tmp/ps5_spoof.psr
-BCCMD="/usr/sbin/bccmd -t bcsp -d /dev/ttyS0 -b 115200"
 
 is_mac() {
     echo "$1" | grep -q '^[0-9A-Fa-f][0-9A-Fa-f]\(:[0-9A-Fa-f][0-9A-Fa-f]\)\{5\}$'
@@ -34,9 +33,22 @@ fi
 
 RADIO_TAKEN=0
 
-attach() {
-    /usr/sbin/hciattach ttyS0 bcsp >/dev/null 2>&1 &
-    sleep 2
+# Load a PS key file and restart the CSR8811 with it. The keys go over HCI (bccmd -t hci, about
+# 0.3 s) while hci0 is attached; the chip's warm reset ends that BCSP link, so hciattach starts
+# a new one (it returns once hci0 is up). bccmd over the bare UART after killing hciattach
+# (BCSP, 3-5 s) failed often on Linux 6.18 and left the chip unreachable until a reboot; it
+# stays only for a radio with no hci0.
+reload() {
+    if /usr/sbin/hciconfig hci0 >/dev/null 2>&1; then
+        /usr/sbin/bccmd -t hci -d hci0 psload -r "$1" >/dev/null || return 1
+        killall -9 hciattach 2>/dev/null
+        sleep 1
+    else
+        killall -9 hciattach 2>/dev/null
+        sleep 1
+        /usr/sbin/bccmd -t bcsp -d /dev/ttyS0 -b 115200 psload -r "$1" >/dev/null || return 1
+    fi
+    /usr/sbin/hciattach ttyS0 bcsp >/dev/null 2>&1
     /usr/sbin/hciconfig hci0 up 2>/dev/null
     /usr/sbin/hciconfig hci0 sspmode 1 2>/dev/null
 }
@@ -45,11 +57,7 @@ attach() {
 # stopped, the spoofed address on air and the supervisor paused until a reboot
 cleanup() {
     if [ "$RADIO_TAKEN" = 1 ]; then
-        killall -9 hciattach 2>/dev/null
-        sleep 1
-        $BCCMD psload -r "$PSR_BASE" || echo "[!] ps5-wake: restoring the Hub BD_ADDR failed" >&2
-        sleep 1
-        attach
+        reload "$PSR_BASE" || echo "[!] ps5-wake: restoring the Hub BD_ADDR failed" >&2
     fi
     rm -f "$SPOOF_PSR" "$LOCK"
     # The supervisor starts hub_btstack again now that the lock is gone
@@ -62,18 +70,15 @@ PSR_VAL=$(echo "$CTRL_MAC" | tr 'A-Z' 'a-z' | sed 's/\([0-9a-f]\{2\}\):\([0-9a-f
 grep -v '&0x0001' "$PSR_BASE" > "$SPOOF_PSR"
 echo "&0x0001 = $PSR_VAL" >> "$SPOOF_PSR"
 
-# Stop hub_btstack and release the UART
+# Stop hub_btstack (its HCI reset would abort the page)
 RADIO_TAKEN=1
-killall -9 hub_btstack hciattach 2>/dev/null
-sleep 1
+killall -9 hub_btstack 2>/dev/null
 
-# Load the controller's BD_ADDR into the CSR8811 via BCSP
-if ! $BCCMD psload -r "$SPOOF_PSR"; then
+# Restart the CSR8811 with the controller's BD_ADDR
+if ! reload "$SPOOF_PSR"; then
     echo "[-] ps5-wake: loading the controller BD_ADDR failed" >&2
     exit 1
 fi
-sleep 1
-attach
 
 # Page the console with R2 page scan and role switch
 BIN_DIR=$(cd "$(dirname "$0")" && pwd)

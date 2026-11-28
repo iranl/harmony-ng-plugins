@@ -49,14 +49,15 @@ On Atheros AR9344 / CSR8811 UART hardware, the Bluetooth controller does **not**
    - BlueZ / CSR word mapping:
      `&0x0001 = 0x(mac[3]) 0x(mac[4])(mac[5]) 0x(mac[2]) 0x(mac[0])(mac[1])`
      *Example (`24:A6:FA:A0:1C:E5`)*: `&0x0001 = 0xa0 0x1ce5 0xfa 0x24a6`
-2. **Warm Reset via BCSP**:
-   - Releasing the UART line discipline (`killall -9 hciattach`) allows raw direct serial communication via `/usr/sbin/bccmd`.
-   - Running `/usr/sbin/bccmd -t bcsp -d /dev/ttyS0 -b 115200 psload -r <psr>` applies the firmware patch bundle and triggers a CSR hardware warm reset in ~1 second.
+2. **Warm Reset via HCI**:
+   - `/usr/sbin/bccmd -t hci -d hci0 psload -r <psr>` writes the whole PS key file (patch bundle included) over the attached `hci0` and warm-resets the CSR8811, in about 0.3 seconds.
+   - Always the whole file: a reload of `&0x0001` alone left the chip unreachable until a reboot.
+   - With no `hci0` the helper falls back to `bccmd -t bcsp -d /dev/ttyS0 -b 115200` on the bare UART (after `killall -9 hciattach`). That path takes 3-5 seconds and on Linux 6.18 often failed, leaving the chip unreachable until a reboot.
 3. **Re-attaching Kernel BCSP**:
-   - `/usr/sbin/hciattach ttyS0 bcsp` attaches the N_HCI line discipline.
+   - The warm reset ends the kernel's BCSP link ("card has reset"): `killall -9 hciattach`, then `/usr/sbin/hciattach ttyS0 bcsp` starts a new one and returns once `hci0` exists.
    - `hciconfig hci0 up && hciconfig hci0 sspmode 1` brings up `hci0` with the spoofed MAC actively transmitting on air.
 4. **Restoration**:
-   - Repeating `psload -r /tmp/pskeys.psr` instantly restores the factory/genuine Hub MAC address (`C8:DB:26:09:BB:85`) and restarts standard system daemons.
+   - The same steps with `/tmp/pskeys.psr` restore the Hub's own MAC address; the supervisor then starts `hub_btstack` again.
 
 ---
 
@@ -125,20 +126,19 @@ sequenceDiagram
     Daemon->>Plugin: Forward JSON via /tmp/plugins/ps5-wake.sock
     Note over Plugin: Detects controller_mac is specified
     Plugin->>Plugin: Create /tmp/hub_btstack.lock (noclobber)
-    Plugin->>Supervisor: killall -9 hub_btstack hciattach
+    Plugin->>Supervisor: killall -9 hub_btstack
     Note over Supervisor: Sees lockfile, pauses respawn loop
-    Plugin->>Radio: bccmd psload -r /tmp/ps5_spoof.psr
+    Plugin->>Radio: bccmd -t hci psload -r /tmp/ps5_spoof.psr
     Note over Radio: Reboots with DualSense MAC (24:A6:FA:A0:1C:E5)
-    Plugin->>Radio: hciattach ttyS0 bcsp && hciconfig hci0 up
+    Plugin->>Radio: killall -9 hciattach; hciattach ttyS0 bcsp && hciconfig hci0 up
     Plugin->>Radio: HCI_Create_Connection (psrm=R2, role=Slave, target=PS5)
     Radio->>PS5: BR/EDR Baseband Page (Whitelisted DualSense MAC)
     PS5-->>Radio: Page Response & ACL Handshake
     PS5->>PS5: POWER ON (Cold Wake Complete!)
     Radio-->>Plugin: HCI_EVENT_CONNECTION_COMPLETE (Status 0x00, handle 0x004d)
-    Plugin->>Radio: killall -9 hciattach
-    Plugin->>Radio: bccmd psload -r /tmp/pskeys.psr
+    Plugin->>Radio: bccmd -t hci psload -r /tmp/pskeys.psr
     Note over Radio: Reboots with genuine Hub MAC (C8:DB:26:09:BB:85)
-    Plugin->>Radio: hciattach ttyS0 bcsp && hciconfig hci0 up
+    Plugin->>Radio: killall -9 hciattach; hciattach ttyS0 bcsp && hciconfig hci0 up
     Plugin->>Plugin: rm -f /tmp/hub_btstack.lock
     Supervisor->>Supervisor: restarts /data/harmony/bin/hub_btstack
     Note over Supervisor: Resumes normal supervision
@@ -152,7 +152,7 @@ sequenceDiagram
    - Harmony Elite and Smart Control remotes operate over the **CC2544 RF transceiver** on SPI (`/dev/rfspi`) handled by `hub_rf`.
    - The CSR8811 UART reload does **not** touch SPI, nor does it affect remote button responsiveness.
 2. **Transient BTstack Pause**:
-   - `hub_btstack` is stopped for the length of the helper run (about 10 seconds, up to about 20 when the page times out), plus the supervisor's restart delay.
+   - `hub_btstack` is stopped for the length of the helper run (about 7 seconds plus the page, which takes up to about 10 seconds when it times out), plus the supervisor's restart delay (5 seconds).
    - Once restored, BTstack reconnects to any active peripheral hosts via `start_host_reconnect()`.
 3. **Fail-Safe Restoration**:
    - The helper's `EXIT` trap restores the genuine address after any failed step. If the helper is killed with `SIGKILL`, `/tmp/pskeys.psr` is preserved on `/tmp`, and the boot sequence (`/etc/init.d/rcS.local`) automatically restores genuine firmware keys on any warm or cold reboot.
