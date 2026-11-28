@@ -538,18 +538,20 @@
     {
       "id": "ps5-wake",
       "name": "PlayStation 5 BT Wake",
-      "version": "1.3.0",
-      "min_harmony_version": "4.0.0",
+      "version": "1.2.0",
       "author": "Harmony-NG Community",
       "description": "Wake PlayStation 4 and PlayStation 5 consoles over Bluetooth via DualSense/DualShock controller emulation",
       "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/ps5-wake",
-      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/ps5-wake-v1.3.0/ps5-wake-plugin.tar.gz",
-      "sha256": "27c9b306337e6b17662b416534e75bb69f145b02a3eec14f16f2302ee517ce88",
-      "legacy": {
-        "version": "1.2.0",
-        "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/ps5-wake-v1.2.0/ps5-wake-plugin.tar.gz",
-        "sha256": "eb4ed07078a77f0cd6bc782811cad05980d1122b49c3c4c7f3a6ee33d764a3c1"
-      },
+      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/ps5-wake-v1.2.0/ps5-wake-plugin.tar.gz",
+      "sha256": "eb4ed07078a77f0cd6bc782811cad05980d1122b49c3c4c7f3a6ee33d764a3c1",
+      "next": [
+        {
+          "version": "1.3.0",
+          "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/ps5-wake-v1.3.0/ps5-wake-plugin.tar.gz",
+          "sha256": "27c9b306337e6b17662b416534e75bb69f145b02a3eec14f16f2302ee517ce88",
+          "min_harmony_version": "4.0.0"
+        }
+      ],
       "device_definition": {
         "device_type": "ps5",
         "display_name": "PlayStation 5 (BT Wake)",
@@ -1186,18 +1188,20 @@
     {
       "id": "switch2-wake",
       "name": "Nintendo Switch 2 BT Wake",
-      "version": "1.2.0",
-      "min_harmony_version": "4.0.0",
+      "version": "1.1.0",
       "author": "Harmony-NG Community",
       "description": "Wake a Nintendo Switch 2 from sleep with the Bluetooth LE wake advertisement of a paired Joy-Con 2 or Pro Controller 2",
       "homepage": "https://github.com/iranl/harmony-ng-plugins/tree/main/switch2-wake",
-      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/switch2-wake-v1.2.0/switch2-wake-plugin.tar.gz",
-      "sha256": "4d9ab87f068f31d7d6ad794e4a16098b11ff6f7b4ef8c56c709f672d9f3a7b3f",
-      "legacy": {
-        "version": "1.1.0",
-        "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/switch2-wake-v1.1.0/switch2-wake-plugin.tar.gz",
-        "sha256": "286fc1e20942149dd201f60acce35eb5a8214896daeca8f522ac57b3ce5a88c0"
-      },
+      "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/switch2-wake-v1.1.0/switch2-wake-plugin.tar.gz",
+      "sha256": "286fc1e20942149dd201f60acce35eb5a8214896daeca8f522ac57b3ce5a88c0",
+      "next": [
+        {
+          "version": "1.2.0",
+          "download_url": "https://github.com/iranl/harmony-ng-plugins/releases/download/switch2-wake-v1.2.0/switch2-wake-plugin.tar.gz",
+          "sha256": "4d9ab87f068f31d7d6ad794e4a16098b11ff6f7b4ef8c56c709f672d9f3a7b3f",
+          "min_harmony_version": "4.0.0"
+        }
+      ],
       "device_definition": {
         "device_type": "switch2",
         "display_name": "Nintendo Switch 2 (BT Wake)",
