@@ -1,6 +1,7 @@
 #!/bin/bash
 # Host tests of the plugins (x86 gcc, no Hub needed):
 #  - device templates: checked against the Hub's limits, devices/index.json up to date
+#  - gen_repository.py: the legacy release (last one for older Hubs)
 #  - android-tv key names, app links and generated client certificate (test_android_tv.c)
 #  - android-tv against a fake TV over TLS (test_fake_tv.py: holds, stale repeats, errors,
 #    dead sessions)
@@ -13,6 +14,8 @@ ROOT=$(cd "$(dirname "$0")/.." && pwd)
 echo "[*] device templates (devices/*.json and devices/index.json)"
 python3 "$ROOT/scripts/device_templates.py" "$ROOT"
 python3 "$ROOT/scripts/test_device_templates.py"
+echo "[*] repository.json generator (last release for older Hubs)"
+python3 "$ROOT/scripts/test_gen_repository.py"
 : "${BEARSSL_DIR:?set BEARSSL_DIR to the BearSSL source tree}"
 WORK="${WORK:-$ROOT/build/host_tests}"
 LIB="$WORK/bearssl_host/libbearssl.a"
